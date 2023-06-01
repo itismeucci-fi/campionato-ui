@@ -7,32 +7,44 @@ import { Observable, throwError } from 'rxjs';
 })
 export class ApiService {
 
-  baseUrl = "http://172.17.0.1:8000";
+  baseUrl = "http://172.17.0.2:8000";
 
   constructor(private httpClient: HttpClient) { }
 
+  /**
+   * tutte le partite
+   */
+  public leggiCalendario(): Observable<any> {
+    return this.httpClient.get<any[]>(this.baseUrl+'/index.php?calendario=');
+  }
 
+  /**
+   * tutte le partite per giornata
+   */
   public leggiGiornate(): Observable<any> {
-    return this.httpClient.get<any[]>(this.baseUrl+'/giornate/tutte.php');
+    return this.httpClient.get<any[]>(this.baseUrl+'/index.php?calendario=giorni');
   }
 
-  public leggiGiornata(numero: number): Observable<any> {
-    const options = { params: new HttpParams().set('numero', numero) };
-    return this.httpClient.get<any[]>(this.baseUrl+'/giornate/singola.php', options);
-  }
-
-  public generaCampionato(): Observable<any> {
-    return this.httpClient.post<any[]>(this.baseUrl+'/giornate/genera.php', {});
-  }
-
-  public giocaGiornata(numero: number): Observable<any> {
-    return this.httpClient.put<any[]>(this.baseUrl+'/giornate/gioca.php', {numero: numero});
+  /**
+   * tutte le partite per una suadra
+   */
+  public leggiSquadra(numero: number): Observable<any> {
+    return this.httpClient.get<any[]>(this.baseUrl+'/index.php?calendario=squadra');
   }
 
 
   public leggiClassifica(): Observable<any> {
-    return this.httpClient.get<any[]>(this.baseUrl+'/classifica/ultima.php');
+    return this.httpClient.get<any[]>(this.baseUrl+'/index.php?classifica');
   }
 
+
+  public giocaGiornata(): Observable<any> {
+    return this.httpClient.get<any[]>(this.baseUrl+'/index.php?giocaGiornata=random');
+  }
+
+
+  public giocaCampionato(): Observable<any> {
+    return this.httpClient.get<any[]>(this.baseUrl+'/index.php?giocaCampionato=random');
+  }
 
 }
